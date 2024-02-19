@@ -1,0 +1,110 @@
+﻿@model IEnumerable<BabyNames.Areas.BabyName.Models.BabyModel>
+@using BabyNames.Areas.BabyName.Models;
+@using Microsoft.AspNetCore.Mvc;
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    Pager pager = new Pager();
+
+    int pageNo = 0;
+
+    if (ViewBag.Pager != null)
+    {
+        pager = ViewBag.Pager;
+        pageNo = pager.CurrentPage;
+    }
+
+}
+
+<div class="d-flex mt-3 mb-3">
+    <h3>Baby List</h3>
+</div>
+
+@*<div class="container">
+    <div class="container-fluid border border-dark p-4 my-3">
+        <form class="row align-items-center">
+
+            <div class="col">
+                <select class="form-select" asp-for="@babyFilterModel.ZodiacID" asp-items="@(new SelectList(ViewBag.ZodiacFilterList,"ZodiacID","ZodiacName"))">
+                    <option value="">Zodiac Sign</option>
+                </select>
+            </div>
+
+            <div class="col">
+                <select class="form-select" asp-for="@babyFilterModel.ReligionID" asp-items="@(new SelectList(ViewBag.ReligionFilterList,"ReligionID","ReligionName"))">
+                    <option value="">Religion</option>
+                </select>
+            </div>
+
+            <div class="col">
+                <select class="form-select" asp-for="@babyFilterModel.NakshatraID" asp-items="@(new SelectList(ViewBag.NakshatraFilterList,"NakshatraID","Nakshatra"))">
+                    <option>Nakshatra</option>
+                </select>
+            </div>
+
+            <div class="col">
+                @Html.DropDownListFor(model => @babyFilterModel.Gender, new List<SelectListItem>
+                {
+                new SelectListItem { Text = "Boy", Value = "Boy" },
+                new SelectListItem { Text = "Girl", Value = "Girl" },
+                new SelectListItem { Text = "Unisex", Value = "Unisex" }
+                }, "Gender", new { @class = "form-select" })
+
+            </div>
+
+
+            <div class="col-2 my-2">
+                <button class="btn btn-outline-success" type="submit" asp-area="BabyName" asp-controller="BabyName" asp-action="BabyFilter">Search</button>
+
+                <button class="btn btn-outline-danger" type="submit" runat="server" OnClientClick="this.form.reset();return false;">Clear</button>
+            </div>
+        </form>
+    </div>
+</div>
+*@
+
+
+<table class="table table-striped" >
+    <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">Name</th>
+            <th scope="col">Meaning</th>
+            <th scope="col">Numerology</th>
+            <th scope="col">Gender</th>
+            <th scope="col">Nakshatra</th>
+            <th scope="col">ZodiacName</th>
+            <th scope="col">ReligionName</th>
+            <th scope="col">Syllables</th>
+            <th scope="col">CategoryName</th>
+        </tr>
+    </thead>
+    <tbody>
+        @{
+            var i = 1;
+        }
+        @foreach (var item in Model)
+        {
+
+            <tr>
+                <td>@i</td>
+                <td>@item.Name</td>
+                <td>@item.Meaning</td>
+                <td>@item.Numerology</td>
+                <td>@item.Gender</td>
+                <td>@item.Nakshatra</td>
+                <td>@item.ZodiacName</td>
+                <td>@item.ReligionName</td>
+                <td>@item.Syllables</td>
+                <td>@item.CategoryName</td>
+
+            </tr>
+            { i++; }
+        }
+        
+    </tbody>
+</table>
+
+
+
+<partial name="_Pager" model="@pager"/>

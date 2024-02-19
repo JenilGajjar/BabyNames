@@ -1,0 +1,77 @@
+﻿@{
+    Layout = "~/Views/Shared/_Layout_Admin.cshtml";
+}
+@model BabyNames.Areas.BabyName.Models.BabyModel
+
+<main class="main" id="main">
+
+    <div class="d-flex mt-3 mb-3">
+        <h3> @ViewData["Title"] Name</h3>
+    </div>
+
+    <div>
+
+        <form method="post"
+              asp-area="SEC_Admin"
+              asp-controller="SEC_Admin"
+              asp-action="BabySave">
+
+            <div class="mb-3">
+                <input type="text" value="@Model.Name" placeholder="Baby Name"
+                       asp-for="@Model.Name" class="form-control" id="floatingInput" />
+                <span asp-validation-for="@Model.Name" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <input type="text" value="@Model.Meaning" placeholder="Meaning"
+                       asp-for="@Model.Meaning" class="form-control" id="floatingInput" />
+                <span asp-validation-for="@Model.Meaning" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <input type="text" value="@Model.Numerology" placeholder="Numerology"
+                       asp-for="@Model.Numerology" class="form-control" id="floatingInput" />
+                <span asp-validation-for="@Model.Numerology" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <select class="form-control" asp-for="ZodiacID" asp-items="@(new SelectList(ViewBag.ZodiacFilterList,"ZodiacID","ZodiacName"))" onchange="stateChange()">
+                    <option value="">Select Zodiac Name</option>
+                </select>
+            </div>
+
+
+            <div class="mb-3">
+                <select class="form-control" asp-for="ReligionID" asp-items="@(new SelectList(ViewBag.ReligionFilterList,"ReligionID","ReligionName"))" onchange="stateChange()">
+                    <option value="">Select Zodiac Name</option>
+                </select>
+            </div>
+
+
+
+            <div class="mb-3">
+                <select class="form-control" asp-for="NakshatraID" asp-items="@(new SelectList(ViewBag.NakshatraFilterList,"NakshatraID","Nakshatra"))" onchange="stateChange()">
+                    <option value="">Select Zodiac Name</option>
+                </select>
+            </div>
+
+
+            <div class="mb-3">
+                <input type="text" value="@Model.Syllables" placeholder="Syllables"
+                       asp-for="@Model.Syllables" class="form-control" id="floatingInput" />
+                <span asp-validation-for="@Model.Syllables" class="text-danger"></span>
+            </div>
+
+            <div class="d-flex justify-content-center my-2">
+                <a asp-area="SEC_Admin"
+                   asp-controller="SEC_Admin"
+                   asp-action="BabyList" class="btn btn-outline-secondary">Back</a>
+
+                
+                <input type="hidden" name="NameID" value="@Model.NameID" />
+                <input type="submit" value="@ViewData["Title"]" class=" mx-2 btn btn-outline-primary" />
+
+            </div>
+        </form>
+    </div>
+</main>

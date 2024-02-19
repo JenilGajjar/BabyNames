@@ -1,0 +1,43 @@
+﻿@{
+    Layout = "~/Views/Shared/_Layout_Admin.cshtml";
+}
+@model IEnumerable<BabyNames.Areas.SEC_User.Models.SEC_UserModel>
+
+<main class="main" id="main">
+
+    <table class="table table-striped">
+        <thead>
+            <tr>
+               
+               <th scopr="col">#</th>
+               <th scopr="col">UserName</th>
+               <th scopr="col">FirstName</th>
+               <th scopr="col">LastName</th>
+               <th scopr="col">Email</th>
+               <th scopr="col">Created</th>
+               <th scopr="col">Modified</th>
+
+            </tr>
+        </thead>
+        <tbody>
+           
+            @foreach (var item in Model)
+            {
+
+                <tr>
+                    <td>@item.UserID</td>
+                    <td>@item.UserName</td>
+                    <td>@item.FirstName</td>
+                    <td>@item.LastName</td>
+                    <td>@item.Email</td>
+                    <td>@Convert.ToDateTime(item.Created).ToString("dd-MM-yyyy")</td>
+                    <td>@Convert.ToDateTime(item.Modified).ToString("dd-MM-yyyy")</td>
+
+                </tr>
+               
+            }
+
+        </tbody>
+    </table>
+
+</main>
