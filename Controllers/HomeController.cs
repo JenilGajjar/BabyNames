@@ -5,7 +5,6 @@ using System.Diagnostics;
 
 namespace BabyNames.Controllers
 {
-    [CheckAccess]
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
@@ -17,12 +16,10 @@ namespace BabyNames.Controllers
 
         public IActionResult Index()
         {
-           
-            //return View($"~/Areas/{areaName}/Views/{controllerName}/{actionName}.cshtml");
 
-            //return RedirectToAction("Index", "SEC_User", new { area = "SEC_User" });
 
-            return View();
+            return RedirectToAction("Index", "SEC_User", new { area = "SEC_User" });
+
         }
 
         public IActionResult Privacy()
@@ -34,6 +31,13 @@ namespace BabyNames.Controllers
         public IActionResult Error()
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+        }
+
+        [Route("/StatusCodeError/{StatusCode}")]
+        public IActionResult Error(int StatusCode)
+        {
+            
+            return View("Index");
         }
     }
 }

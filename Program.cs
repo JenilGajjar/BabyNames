@@ -1,3 +1,5 @@
+using static System.Net.Mime.MediaTypeNames;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -18,6 +20,9 @@ if (!app.Environment.IsDevelopment())
     // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
+//app.UseStatusCodePages(Text.Plain,"Status Code with Page with formatted string : {0 }");
+
+app.UseStatusCodePagesWithRedirects("/StatusCodeError/{0}");
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
