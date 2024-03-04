@@ -1,0 +1,52 @@
+﻿@model IEnumerable<BabyNames.Areas.BabyName.Models.BabyModel>
+@using BabyNames.BAL
+@using BabyNames.Areas.BabyName.Models;
+@using Microsoft.AspNetCore.Mvc;
+@{
+    Layout = "~/Views/Shared/_Layout_User.cshtml";
+
+}
+
+<div class="container mt-4">
+    <h1 class="text-center">Favorite List</h1>
+   
+    <div class="table-responsive mt-4">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Name</th>
+                    <th scope="col">Meaning</th>
+                    <th scope="col">Numerology</th>
+                    <th scope="col">Gender</th>
+                    <th scope="col">Nakshatra</th>
+                    <th scope="col">ZodiacName</th>
+                    <th scope="col">ReligionName</th>
+                    <th scope="col">Syllables</th>
+                    <th scope="col">CategoryName</th>
+                </tr>
+            </thead>
+            <tbody>
+                @{
+                    var i = 1;
+                }
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>@i</td>
+                        <td>@item.Name</td>
+                        <td>@item.Meaning</td>
+                        <td>@item.Numerology</td>
+                        <td>@item.Gender</td>
+                        <td>@item.Nakshatra</td>
+                        <td>@item.ZodiacName</td>
+                        <td>@item.ReligionName</td>
+                        <td>@item.Syllables</td>
+                        <td>@item.CategoryName</td>
+                    </tr>
+                    { i++; }
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

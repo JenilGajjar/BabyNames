@@ -1,7 +1,11 @@
-﻿using BabyNames.Areas.SEC_User.Models;
+﻿using BabyNames.Areas.BabyName.Models;
+using BabyNames.Areas.SEC_User.Models;
 using BabyNames.BAL;
+using BabyNames.DAL.Baby_DAL;
 using BabyNames.DAL.SEC_UserDAL;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using NuGet.Protocol.Core.Types;
 using System.Configuration;
 using System.Data;
 
@@ -22,6 +26,15 @@ namespace BabyNames.Areas.SEC_User.Controllers
 
         #endregion
 
+        Baby_DALBase baby_DALBase = new Baby_DALBase();
+
+        #region Index
+        public IActionResult Index()
+        {
+            return View();
+        }
+        #endregion
+
 
         #region SEC_UserSignIn
         public IActionResult SEC_UserSignIn()
@@ -37,6 +50,7 @@ namespace BabyNames.Areas.SEC_User.Controllers
         }
         #endregion
 
+        #region Login
 
         [HttpPost]
         public IActionResult Login(SEC_UserModel modelSEC_User)
@@ -74,6 +88,7 @@ namespace BabyNames.Areas.SEC_User.Controllers
                         HttpContext.Session.SetString("Email", dr["Email"].ToString());
                         HttpContext.Session.SetString("PhotoPath", dr["PhotoPath"].ToString());
                         HttpContext.Session.SetString("IsAdmin", dr["IsAdmin"].ToString());
+                        Console.WriteLine(dr["PhotoPath"]);
                         break;
                     }
                 }
@@ -92,7 +107,7 @@ namespace BabyNames.Areas.SEC_User.Controllers
                     }
                     else
                     {
-                        return RedirectToAction("Index", "BabyName", new { area = "BabyName" });
+                        return RedirectToAction("Index", "SEC_User", new { area = "SEC_User" });
                     }
                 }
 
@@ -100,14 +115,18 @@ namespace BabyNames.Areas.SEC_User.Controllers
             return View();
         }
 
+        #endregion
 
+        #region Logout
         public IActionResult Logout()
         {
             HttpContext.Session.Clear();
 
-            return View("Login");
+            return View("Index");
         }
-       
+        #endregion
+
+        #region Register
         public IActionResult Register(SEC_UserModel modelSEC_User)
         {
 
@@ -151,7 +170,140 @@ namespace BabyNames.Areas.SEC_User.Controllers
                 }
             }
         }
+        #endregion
 
+        #region BabyList
+        public IActionResult BabyList()
+        {
+            try
+            {
+
+                ViewBag.ZodiacFilterList = baby_DALBase.ZodiacFilter();
+                ViewBag.ReligionFilterList = baby_DALBase.ReligionFilter();
+                ViewBag.NakshatraFilterList = baby_DALBase.NakshatraFilter();
+
+
+
+
+                ViewBag.FavoriteStatus = baby_DALBase.PR_GetFavoriteStatus_For_SEC_User();
+
+                List<BabyModel> babyList = baby_DALBase.PR_SELECT_ALL_BabyNames();
+
+
+
+                return View(babyList);
+
+            }
+            catch
+            {
+                return View();
+            }
+        }
+        #endregion
+
+        #region Filter
+
+        public IActionResult BabyFilter(BabyFilterModel babyfiltermodel)
+        {
+
+            Console.WriteLine(babyfiltermodel.Gender);
+
+            ViewBag.ZodiacFilterList = baby_DALBase.ZodiacFilter();
+            ViewBag.ReligionFilterList = baby_DALBase.ReligionFilter();
+            ViewBag.NakshatraFilterList = baby_DALBase.NakshatraFilter();
+
+            ViewBag.FavoriteStatus = baby_DALBase.PR_GetFavoriteStatus_For_SEC_User();
+
+            List<BabyModel> list = baby_DALBase.PR_BabyNames_FILTER(babyfiltermodel);
+
+
+            ModelState.Clear();
+
+            return View("BabyList", list);
+
+        }
+        #endregion
+
+        #region UserProfile
+        public IActionResult UserProfile()
+        {
+            SEC_UserDALBase userDAL = new SEC_UserDALBase(_webHostEnvironment);
+
+            int UserID = (int)CV.UserID();
+            SEC_UserModel modelSEC_User = userDAL.PR_SEC_UserSelectByUserName(UserID);
+
+            return View(modelSEC_User);
+        }
+
+        #endregion
+
+        #region User Update
+        public IActionResult UserUpdate(SEC_UserModel sEC_UserModel)
+        {
+
+
+            sEC_UserModel.UserID = (int) CV.UserID();
+            SEC_UserDALBase userDAL = new SEC_UserDALBase(_webHostEnvironment);
+            sEC_UserModel.Password = sEC_UserModel.Password ?? CV.Password();
+            userDAL.PR_SEC_User_UPDATEByPK(sEC_UserModel);
+
+
+            return View("Index");
+
+        }
+        #endregion
+
+        #region Change Password
+        [HttpPost]
+        public IActionResult ChangePassword(string NewPassword)
+        {
+
+            // For example:
+            SEC_UserDALBase sEC_UserDALBase = new SEC_UserDALBase(_webHostEnvironment);
+
+            int UserID = (int)CV.UserID()!;
+            
+
+            sEC_UserDALBase.PR_SEC_User_CHANGE_PASSWORD(UserID, NewPassword);
+            return View("Index");
+        }
+        #endregion
+
+        #region  UpdateFavoriteStatus
+
+        [HttpPost]
+        public IActionResult UpdateFavoriteStatus(int NameId, bool IsFavorite)
+        {
+            // Get the current user ID
+            int UserId = (int) CV.UserID();
+
+            // Call the appropriate stored procedure based on isFavorite parameter
+            if (IsFavorite)
+            {
+                // If isFavorite is true, call the procedure to select the favorite name
+                baby_DALBase.PR_SelectFavoriteName(UserId, NameId);
+            }
+            else
+            {
+                // If isFavorite is false, call the procedure to unselect the favorite name
+                baby_DALBase.PR_UnselectFavoriteName(UserId, NameId);
+            }
+
+            // Return success response
+            return View("BabyList");
+        }
+
+
+        #endregion
+
+        #region FavoriteNamesPage
+        public IActionResult FavoriteNamesPage()
+        {
+            List<BabyModel> list = baby_DALBase.PR_GetUserFavoriteNames();
+            return View(list);
+        }
+
+        #endregion
 
     }
 }

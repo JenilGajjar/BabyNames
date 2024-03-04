@@ -14,73 +14,45 @@ namespace BabyNames.Areas.BabyName.Controllers
         Baby_DALBase baby_DALBase = new Baby_DALBase();
 
 
-        //public IActionResult BabyFilter(BabyFilterModel babyfiltermodel)
-        //{
+        public IActionResult BabyFilter(BabyFilterModel babyfiltermodel)
+        {
 
-        //    Console.WriteLine(babyfiltermodel.Gender);
+            Console.WriteLine(babyfiltermodel.Gender);
 
-        //    ViewBag.ZodiacFilterList = baby_BALBase.ZodiacFilter();
-        //    ViewBag.ReligionFilterList = baby_BALBase.ReligionFilter();
-        //    ViewBag.NakshatraFilterList = baby_BALBase.NakshatraFilter();
+            ViewBag.ZodiacFilterList = baby_DALBase.ZodiacFilter();
+            ViewBag.ReligionFilterList = baby_DALBase.ReligionFilter();
+            ViewBag.NakshatraFilterList = baby_DALBase.NakshatraFilter();
 
-        //    list = baby_BALBase.PR_BabyNames_FILTER(babyfiltermodel);
 
-        //    this.flag = false;
-        //    Console.WriteLine("Value of flag : in filter " + flag);
+            List<BabyModel>  list = baby_DALBase.PR_BabyNames_FILTER(babyfiltermodel);
 
-        //    int pg = 1;
 
-        //    const int pageSize = 20;
-        //    if (pg < 1) pg = 1;
+            ModelState.Clear();
 
-        //    int resCount = list.Count;
+            return View("Index", list);
 
-        //    var pager = new Pager(resCount, pg, pageSize);
-
-        //    int recSkip = (pg - 1) * pageSize;
-
-        //    var data = list.Skip(recSkip).Take(pager.PageSize).ToList();
-
-        //    ViewBag.Pager = pager;
-
-        //    ModelState.Clear();
-
-        //    return View("Index", data);
-
-        //}
+        }
 
 
         #region BabyList
-        public IActionResult Index(int pg = 1)
+        public IActionResult Index()
         {
 
 
             try
             {
 
-            //ViewBag.ZodiacFilterList = baby_BALBase.ZodiacFilter();
-            //ViewBag.ReligionFilterList = baby_BALBase.ReligionFilter();
-            //ViewBag.NakshatraFilterList = baby_BALBase.NakshatraFilter();
+            ViewBag.ZodiacFilterList = baby_DALBase.ZodiacFilter();
+            ViewBag.ReligionFilterList = baby_DALBase.ReligionFilter();
+            ViewBag.NakshatraFilterList = baby_DALBase.NakshatraFilter();
 
 
             List<BabyModel> babyList = baby_DALBase.PR_SELECT_ALL_BabyNames();
 
-            const int pageSize = 20;
-            if (pg < 1) pg = 1;
+           
 
-            int resCount = (babyList == null) ? 0 : babyList.Count ;
+            return View(babyList);
 
-            var pager = new Pager(resCount, pg, pageSize);
-
-            int recSkip = (pg - 1) * pageSize;
-
-            var data = babyList.Skip(recSkip).Take(pager.PageSize).ToList();
-
-
-            ViewBag.Pager = pager;
-
-
-            return View(data);
             }catch 
             {
                 return View();

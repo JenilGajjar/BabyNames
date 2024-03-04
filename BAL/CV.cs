@@ -114,7 +114,6 @@
                 ProfilePicture =
                _HttpContextAccessor.HttpContext.Session.GetString("PhotoPath").ToString();
             }
-
             return ProfilePicture;
         }
 

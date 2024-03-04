@@ -17,12 +17,12 @@ namespace BabyNames.Controllers
 
         public IActionResult Index()
         {
-            string controllerName = "SEC_User";
-            string actionName = "Login";
-            string areaName = "SEC_User";
+           
+            //return View($"~/Areas/{areaName}/Views/{controllerName}/{actionName}.cshtml");
 
-            // Return the view from the specified controller and area
-            return View($"~/Areas/{areaName}/Views/{controllerName}/{actionName}.cshtml");
+            //return RedirectToAction("Index", "SEC_User", new { area = "SEC_User" });
+
+            return View();
         }
 
         public IActionResult Privacy()

@@ -461,8 +461,8 @@ h6 {
   list-style: none;
 }
 .profile{
-    margin-left:8em;
-    margin-top:5em;
+    margin: 0;
+
 }
 .header-nav > ul {
     margin: 0;

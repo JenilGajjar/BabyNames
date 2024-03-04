@@ -1,4 +1,6 @@
-﻿<!DOCTYPE html>
+﻿@using BabyNames.BAL
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -11,7 +13,7 @@
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/BabyNames.styles.css" asp-append-version="true" />
-
+    <link href="~/assets/vendor/simple-datatables/style.css" rel="stylesheet">
 </head>
 <body>
     <header>
@@ -24,9 +26,55 @@
                         <li class="nav-item ">
                             <a class="nav-link text-dark" asp-area="BabyName" asp-controller="BabyName" asp-action="Index">Home</a>
                         </li>
-                        <li class="nav-item ml-auto">
+                       @*  <li class="nav-item ml-auto">
                             <a class="nav-link text-dark" asp-area="SEC_User" asp-controller="SEC_User" asp-action="Logout"> <i class="fas fa-sign-out-alt"></i> Logout</a>
-                        </li>
+                        </li> *@
+                        
+                        <li class="nav-item dropdown pe-3">
+
+                            <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#" data-bs-toggle="dropdown">
+                                <img src="@CV.PhotoPath()" alt="Profile" class="rounded-circle" style="height:30px;width:30px">
+                                <span class="d-none d-md-block dropdown-toggle ps-2">@CV.FirstName() @CV.LastName() </span>
+                            </a><!-- End Profile Iamge Icon -->
+
+                            <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow profile">
+                                <li class="dropdown-header">
+                                    <h6>@CV.FirstName() @CV.LastName() </h6>
+                                </li>
+                                <li>
+                                    <hr class="dropdown-divider">
+                                </li>
+
+                                <li>
+                                    <a class="dropdown-item d-flex align-items-center"
+                                       asp-area="SEC_Admin"
+                                       asp-controller="SEC_Admin"
+                                       asp-action="UserProfile">
+                                        <i class="bi bi-person"></i>
+                                        <span>My Profile</span>
+                                    </a>
+                                </li>
+
+
+                                <li>
+                                    <hr class="dropdown-divider">
+                                </li>
+
+                                <li>
+                                    <a class="dropdown-item d-flex align-items-center" asp-area="SEC_User" asp-controller="SEC_User" asp-action="Logout">
+                                        <i class="bi bi-box-arrow-right"></i>
+                                        <span>Logout</span>
+                                    </a>
+                                </li>
+
+                                @* <li class="nav-item ml-auto">
+                                <a class="nav-link text-dark" > <i class="fas fa-sign-out-alt"></i> Logout</a>
+                                </li>*@
+
+                            </ul><!-- End Profile Dropdown Items -->
+                        </li><!-- End Profile Nav -->
+
+
                     </ul>
                 </div>
             </div>
@@ -34,6 +82,9 @@
 
 
     </header>
+
+   
+
     <div class="container">
         <main role="main" class="pb-3">
             @RenderBody()
@@ -42,14 +93,29 @@
 
     <footer class="border-top footer text-muted">
         <div class="container">
-            &copy; 2023 - BabyNames - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+            &copy; 2023 - BabyNames 
         </div>
     </footer>
+
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
 
 
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+
+
+
+    <!-- Vendor JS Files -->
+    <script src="~/assets/vendor/simple-datatables/simple-datatables.js"></script>
+    <script src="~/assets/vendor/tinymce/tinymce.min.js"></script>
+
+    <!-- Template Main JS File -->
+    <script src="~/assets/js/main.js"></script>
+
+
     @await RenderSectionAsync("Scripts", required: false)
+
 </body>
 </html>

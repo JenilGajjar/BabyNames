@@ -15,7 +15,7 @@ namespace BabyNames.BAL
 
             if (filterContext.HttpContext.Session.GetString("UserID") == null)
             {
-                filterContext.Result = new RedirectResult("~/SEC_User/SEC_User/SEC_UserSignIn");
+                filterContext.Result = new RedirectResult("~/SEC_User/SEC_User/Index");
             }
         }
 

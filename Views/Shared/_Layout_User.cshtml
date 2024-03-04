@@ -1,0 +1,175 @@
+﻿@using BabyNames.BAL
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>Baby Names</title>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <meta content="" name="keywords">
+    <meta content="" name="description">
+
+    <!-- Favicon -->
+    <link href="~/assetsUser/img/baby.png" rel="icon">
+
+
+    <!-- Google Web Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;600&family=Inter:wght@600&family=Lobster+Two:wght@700&display=swap" rel="stylesheet">
+
+    <!-- Icon Font Stylesheet -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet">
+
+    <!-- Libraries Stylesheet -->
+    <link href="~/assetsUser/lib/animate/animate.min.css" rel="stylesheet">
+
+
+    <link href="~/assetsUser/lib/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet">
+
+    <link href="~/assets/vendor/simple-datatables/style.css" rel="stylesheet">
+
+    <!-- Customized Bootstrap Stylesheet -->
+    <link href="~/assetsUser/css/bootstrap.min.css" rel="stylesheet">
+
+
+
+    <!-- Template Stylesheet -->
+    <link href="~/assetsUser/css/style.css" rel="stylesheet">
+
+    <link href="~/assets/vendor/simple-datatables/style.css" rel="stylesheet">
+
+
+    
+
+</head>
+
+<body>
+
+
+    <!-- Spinner Start -->
+    <div id="spinner" class="show bg-white position-fixed translate-middle w-100 vh-100 top-50 start-50 d-flex align-items-center justify-content-center">
+        <div class="spinner-border text-primary" style="width: 3rem; height: 3rem;" role="status">
+            <span class="sr-only">Loading...</span>
+        </div>
+    </div>
+    <!-- Spinner End -->
+    <!-- Navbar Start -->
+    <nav class="navbar navbar-expand-lg bg-white navbar-light sticky-top px-4 px-lg-5 py-lg-0">
+        <a href="index.html" class="navbar-brand">
+            <h1 class="m-0 text-primary"><i class="fa fa-book-reader me-3"></i>Baby Names</h1>
+        </a>
+        <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarCollapse">
+            <div class="navbar-nav mx-auto">
+                <a asp-area="SEC_User"
+                   asp-controller="SEC_User"
+                   asp-action="Index" class="nav-item nav-link">
+                    Home
+                </a>
+
+
+                <a asp-area="SEC_User"
+                   asp-controller="SEC_User"
+                   asp-action="BabyList" class="nav-item nav-link">
+                    Names
+                </a>
+
+
+            </div>
+
+            @{
+                if (CV.UserID() == null)
+                {
+
+                    <a  class="btn btn-primary rounded-pill px-3 d-none d-lg-block"
+                        asp-area="SEC_User"
+                       asp-controller="SEC_User"
+                       asp-action="SEC_UserSignIn"
+                       >Login<i class="fa fa-arrow-right ms-3"></i></a>
+                }
+                else
+                {
+                    <img src="@CV.PhotoPath()" style="height:35px;width:35px;" class="rounded rounded-circle" />
+
+                    <div class="nav-item dropdown ">
+                        <a href="#" class="nav-link dropdown-toggle  d-none d-lg-block" data-bs-toggle="dropdown">
+                            @CV.FirstName() @CV.LastName()
+                        </a>
+                        <div class="dropdown-menu rounded-0 rounded-bottom border-0 shadow-sm m-0">
+                            <a asp-area="SEC_User"
+                               asp-controller="SEC_User"
+                               asp-action="UserProfile"
+                               class="dropdown-item">User Profile</a>
+
+                            <a asp-area="SEC_User"
+                               asp-controller="SEC_User"
+                               asp-action="FavoriteNamesPage"
+                               class="dropdown-item">Favorites</a>
+                               
+                               <a asp-area="SEC_User"
+                               asp-controller="SEC_User"
+                               asp-action="Logout"
+                               class="dropdown-item">Logout</a>
+
+                        </div>
+                    </div>
+                }
+            }
+        </div>
+    </nav>
+    <!-- Navbar End -->
+
+
+
+
+    <div class="container">
+        <main role="main" class="pb-3">
+            @RenderBody()
+        </main>
+    </div>
+
+
+
+    <!-- JavaScript Libraries -->
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/assetsUser/lib/wow/wow.min.js"></script>
+    <script src="~/assetsUser/lib/easing/easing.min.js"></script>
+    <script src="~/assetsUser/lib/waypoints/waypoints.min.js"></script>
+    <script src="~/assetsUser/lib/owlcarousel/owl.carousel.min.js"></script>
+
+
+    <!-- Template Javascript -->
+    <script src="~/assetsUser/js/main.js"></script>
+
+    <!-- Vendor JS Files -->
+    <script src="~/assets/vendor/simple-datatables/simple-datatables.js"></script>
+    <script src="~/assets/vendor/tinymce/tinymce.min.js"></script>
+
+
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+
+
+
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+
+
+    <!-- Template Main JS File -->
+    <script src="~/assets/js/main.js"></script>
+
+
+
+
+    @await RenderSectionAsync("Scripts", required: false)
+
+</body>
+</html>

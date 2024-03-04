@@ -12,10 +12,13 @@ namespace BabyNames.Areas.BabyName.Models
         
         [Required(ErrorMessage ="Meaning is requied")]
         public string? Meaning { get; set; }
-        public int? Numerology { get; set; }
-        [Required]
+        
+        
+        [Range(0, int.MaxValue, ErrorMessage = "Please enter valid integer Number")]
 
-        public List<Gender> Genders { get; set; }
+        public int? Numerology { get; set; }
+
+        [Required]
         public string? Gender { get; set; }
         public string? Nakshatra { get; set; }
 
@@ -29,18 +32,15 @@ namespace BabyNames.Areas.BabyName.Models
 
         public string? ZodiacName { get; set; }
         public string? ReligionName { get; set; }
+
+        [Range(1, float.MaxValue, ErrorMessage = "Please enter valid float Number")]
+
         public string? Syllables { get; set; }
         public string? CategoryName { get; set; }
 
     }
 
-    public enum Gender
-    {
-        Boy,
-        Girl,
-        Unisex
-    }
-
+  
 
     public class BabyFilterModel
     {
@@ -48,6 +48,9 @@ namespace BabyNames.Areas.BabyName.Models
         public string? Gender { get; set; }
         public int? ReligionID { get; set; }
         public int? NakshatraID { get; set; }
+
+        public string? Name { get; set; }
+
 
     }
 

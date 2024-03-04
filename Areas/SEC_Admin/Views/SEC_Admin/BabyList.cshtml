@@ -71,24 +71,23 @@
                     <td>@item.ZodiacName</td>
                     <td>@item.ReligionName</td>
                     <td>@item.Syllables</td>
-                    <td class="border border-danger">
-                        <div class="border border-primary d-flex text-center">
-
-                            <a asp-area="SEC_Admin"
-                               asp-controller="SEC_Admin"
-                               asp-action="BabyAdd"
-                               asp-route-NameID="@item.NameID"
-                               class="btn btn-outline-primary mx-3">Edit</a>
-
-                            <a asp-area="SEC_Admin"
-                               asp-controller="SEC_Admin"
-                               asp-action="BabyDelete"
-                               asp-route-NameID="@item.NameID"
-                               class="btn btn-outline-danger"
-                               onclick="return confirm('Are you sure you want to delete this record : @item.Name ')">Delete</a>
-
+                    <td >
+                        <div class="d-flex justify-content-center" style="height: 100%;">
+                                <a asp-area="SEC_Admin"
+                                   asp-controller="SEC_Admin"
+                                   asp-action="BabyAdd"
+                                   asp-route-NameID="@item.NameID"
+                                   class="btn btn-outline-primary mx-2">Edit</a>
+                                <a asp-area="SEC_Admin"
+                                   asp-controller="SEC_Admin"
+                                   asp-action="BabyDelete"
+                                   asp-route-NameID="@item.NameID"
+                                   class="btn btn-outline-danger"
+                                   onclick="return confirm('Are you sure you want to delete this record : @item.Name ')">Delete</a>
                         </div>
                     </td>
+
+
 
                 </tr>
             }

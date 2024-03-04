@@ -31,38 +31,40 @@ namespace BabyNames.DAL.SEC_AdminDAL
 
         public bool PR_Baby_Name_Save(BabyModel babyModel)
         {
+            Console.WriteLine("Id is" +  babyModel.NameID);
+
             try
             {
                 SqlDatabase sqlDatabase = new SqlDatabase(ConnString);
 
-                if (babyModel.NameID == 0)
+                if (babyModel.NameID ==null)
                 {
                     DbCommand db = sqlDatabase.GetStoredProcCommand("PR_Baby_Name_INSERT");
                     sqlDatabase.AddInParameter(db, "@Name", DbType.String, babyModel.Name);
                     sqlDatabase.AddInParameter(db, "@Meaning", DbType.String, babyModel.Meaning);
-                    sqlDatabase.AddInParameter(db, "@Numerology", DbType.String, babyModel.Numerology);
+                    sqlDatabase.AddInParameter(db, "@Numerology", DbType.Int32, babyModel.Numerology);
                     sqlDatabase.AddInParameter(db, "@Gender", DbType.String, babyModel.Gender);
-                    sqlDatabase.AddInParameter(db, "@NakshatraID", DbType.String, babyModel.NakshatraID);
-                    sqlDatabase.AddInParameter(db, "@ZodiacID", DbType.String, babyModel.ZodiacName);
-                    sqlDatabase.AddInParameter(db, "@ReligionID", DbType.String, babyModel.ReligionID);
+                    sqlDatabase.AddInParameter(db, "@NakshatraID", DbType.Int32, babyModel.NakshatraID);
+                    sqlDatabase.AddInParameter(db, "@ZodiacID", DbType.Int32, babyModel.ZodiacName);
+                    sqlDatabase.AddInParameter(db, "@ReligionID", DbType.Int32, babyModel.ReligionID);
                     sqlDatabase.AddInParameter(db, "@Syllables", DbType.String, babyModel.Syllables);
-                    sqlDatabase.AddInParameter(db, "@CategoryID", DbType.String, babyModel.CategoryID);
+                    sqlDatabase.AddInParameter(db, "@CategoryID", DbType.Int32, babyModel.CategoryID);
                     bool IsSuccess = Convert.ToBoolean(sqlDatabase.ExecuteNonQuery(db));
                     return IsSuccess;
                 }
                 else
                 {
                     DbCommand db = sqlDatabase.GetStoredProcCommand("PR_Baby_Name_UPDATEByPK");
-                    sqlDatabase.AddInParameter(db, "@NameID", DbType.String, babyModel.NameID);
+                    sqlDatabase.AddInParameter(db, "@NameID", DbType.Int32, babyModel.NameID);
                     sqlDatabase.AddInParameter(db, "@Name", DbType.String, babyModel.Name);
                     sqlDatabase.AddInParameter(db, "@Meaning", DbType.String, babyModel.Meaning);
-                    sqlDatabase.AddInParameter(db, "@Numerology", DbType.String, babyModel.Numerology);
+                    sqlDatabase.AddInParameter(db, "@Numerology", DbType.Int32, babyModel.Numerology);
                     sqlDatabase.AddInParameter(db, "@Gender", DbType.String, babyModel.Gender);
-                    sqlDatabase.AddInParameter(db, "@NakshatraID", DbType.String, babyModel.NakshatraID);
-                    sqlDatabase.AddInParameter(db, "@ZodiacID", DbType.String, babyModel.ZodiacName);
-                    sqlDatabase.AddInParameter(db, "@ReligionID", DbType.String, babyModel.ReligionID);
+                    sqlDatabase.AddInParameter(db, "@NakshatraID", DbType.Int32, babyModel.NakshatraID);
+                    sqlDatabase.AddInParameter(db, "@ZodiacID", DbType.Int32, babyModel.ZodiacName);
+                    sqlDatabase.AddInParameter(db, "@ReligionID", DbType.Int32, babyModel.ReligionID);
                     sqlDatabase.AddInParameter(db, "@Syllables", DbType.String, babyModel.Syllables);
-                    sqlDatabase.AddInParameter(db, "@CategoryID", DbType.String, babyModel.CategoryID);
+                    sqlDatabase.AddInParameter(db, "@CategoryID", DbType.Int32, babyModel.CategoryID);
                     bool IsSuccess = Convert.ToBoolean(sqlDatabase.ExecuteNonQuery(db));
                     return IsSuccess;
                 }
@@ -79,13 +81,14 @@ namespace BabyNames.DAL.SEC_AdminDAL
 
         public BabyModel PR_Baby_Name_SelectByPK(int NameID)
         {
-
             try
             {
                 
 
                 SqlDatabase sqlDatabase = new SqlDatabase(ConnString);
                 DbCommand dbCommand = sqlDatabase.GetStoredProcCommand("PR_Baby_Name_SelectByPK");
+
+
                 sqlDatabase.AddInParameter(dbCommand, "@NameID", DbType.Int32, NameID);
                 BabyModel babyModel = new BabyModel();
 
@@ -127,6 +130,28 @@ namespace BabyNames.DAL.SEC_AdminDAL
 
 
 
+        }
+        #endregion
+
+        #region Method : PR_COUNT_RECORDS
+        public DataTable PR_COUNT_RECORDS()
+        {
+
+            try
+            {
+                SqlDatabase sqlDatabase = new SqlDatabase(ConnString);
+                DbCommand dbCommand = sqlDatabase.GetStoredProcCommand("PR_COUNT_RECORDS");
+                DataTable dataTable = new DataTable();
+                using (IDataReader dataReader = sqlDatabase.ExecuteReader(dbCommand))
+                {
+                    dataTable.Load(dataReader);
+                }
+                return dataTable;
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
         }
         #endregion
 

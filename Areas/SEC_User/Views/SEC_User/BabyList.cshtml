@@ -1,0 +1,181 @@
+﻿@model IEnumerable<BabyNames.Areas.BabyName.Models.BabyModel>
+@using BabyNames.BAL
+@using BabyNames.Areas.BabyName.Models;
+@using Microsoft.AspNetCore.Mvc;
+@{
+    Layout = "~/Views/Shared/_Layout_User.cshtml";
+
+    // Pager pager = new Pager();
+
+    // int pageNo = 0;
+
+    // if (ViewBag.Pager != null)
+    // {
+    //     pager = ViewBag.Pager;
+    //     pageNo = pager.CurrentPage;
+    // }
+    BabyFilterModel babyFilterModel = new BabyFilterModel();
+
+    var favoriteStatus = ViewBag.FavoriteStatus as Dictionary<int, bool>;
+    var IsLoggedIn = CV.UserID() != null;
+}
+
+<div class="text-center mt-4">
+    <h1>Baby List</h1>
+</div>
+
+<div class="container">
+    <div class="container-fluid  py-5 ">
+        <form class=" ">
+
+            <div class="row">
+                <div class="col">
+                    @Html.DropDownListFor(model => @babyFilterModel.Gender, new List<SelectListItem>
+                    {
+                    new SelectListItem { Text = "Boy", Value = "Boy" },
+                    new SelectListItem { Text = "Girl", Value = "Girl" },
+                    new SelectListItem { Text = "Unisex", Value = "Unisex" }
+                    }, "Gender", new { @class = "form-select" })
+
+                </div>
+                <div class="col">
+                    <input type="text" class="form-control" asp-for="@babyFilterModel.Name" placeholder="Enter Baby Name" />
+                </div>
+            </div>
+
+            <div class="row  my-4">
+                <div class="col">
+                    <select class="form-select" asp-for="@babyFilterModel.ZodiacID" asp-items="@(new SelectList(ViewBag.ZodiacFilterList,"ZodiacID","ZodiacName"))">
+                        <option value="">Zodiac Sign</option>
+                    </select>
+                </div>
+
+                <div class="col">
+                    <select class="form-select" asp-for="@babyFilterModel.ReligionID" asp-items="@(new SelectList(ViewBag.ReligionFilterList,"ReligionID","ReligionName"))">
+                        <option value="">Religion</option>
+                    </select>
+                </div>
+
+
+                <div class="col">
+                    <select class="form-select" asp-for="@babyFilterModel.NakshatraID" asp-items="@(new SelectList(ViewBag.NakshatraFilterList,"NakshatraID","Nakshatra"))">
+                        <option>Nakshatra</option>
+                    </select>
+                </div>
+            </div>
+            <div class="row d-flex justify-content-center">
+
+
+                @* <div class="d-flex justrify border border-primary"> *@
+                <button class="btn btn-outline-success col-3 " style="margin-right:100px;" type="submit" asp-area="SEC_User" asp-controller="SEC_User" asp-action="BabyFilter">Search</button>
+
+                <button class="btn btn-outline-danger col-3" type="submit" runat="server" OnClientClick="this.form.reset();return false;">Clear</button>
+                @* </div> *@
+            </div>
+
+        </form>
+    </div>
+</div>
+
+
+<table class="table-danger datatable center">
+    <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">Name</th>
+            <th scope="col">Meaning</th>
+            <th scope="col">Numerology</th>
+            <th scope="col">Gender</th>
+            <th scope="col">Nakshatra</th>
+            <th scope="col">ZodiacName</th>
+            <th scope="col">ReligionName</th>
+            <th scope="col">Syllables</th>
+            <th scope="col">CategoryName</th>
+            <th scope="col ">Favorites</th>
+        </tr>
+    </thead>
+    <tbody>
+        @{
+            var i = 1;
+        }
+        @foreach (var item in Model)
+        {
+
+            <tr>
+                <td>@i</td>
+                <td>@item.Name</td>
+                <td>@item.Meaning</td>
+                <td>@item.Numerology</td>
+                <td>@item.Gender</td>
+                <td>@item.Nakshatra</td>
+                <td>@item.ZodiacName</td>
+                <td>@item.ReligionName</td>
+                <td>@item.Syllables</td>
+                <td>@item.CategoryName</td>
+                <td >
+                    @{
+                        bool isFavorite = favoriteStatus.ContainsKey(item.NameID ?? 0) && favoriteStatus[item.NameID ?? 0];
+                        string heartClass = isFavorite ? "heart-filled" : "heart-empty";
+                    }
+                    <span class="heart-icon @heartClass ms-4" data-nameid="@item.NameID"></span>
+                </td>
+            </tr>
+            { i++; }
+        }
+
+    </tbody>
+</table>
+
+
+
+@* <partial name="_Pager" model="@pager"/> *@
+@section Scripts {
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            // Event handler for clicking heart icon
+            $('.heart-icon').click(function () {
+                var isLoggedIn = @Html.Raw(IsLoggedIn ? "true" : "false"); // Convert IsLoggedIn to JavaScript boolean value
+
+                if (isLoggedIn) {
+                    // Toggle heart icon class between heart-filled and heart-empty
+                    $(this).toggleClass('heart-filled heart-empty');
+
+                    // Get name ID and favorite status
+                    var NameID = $(this).data('nameid');
+                    var IsFavorite = $(this).hasClass('heart-filled');
+
+                    // Send AJAX request to update favorite status
+                    updateFavoriteStatus(NameID, IsFavorite);
+                } else {
+                    // Redirect to login page or show a message indicating that the user needs to be logged in
+                    alert('Please log in to use this feature.');
+                    // You can redirect the user to the login page using:
+                    // window.location.href = '/SEC_User/SEC_User/SEC_UserSignIn';
+                }
+            });
+
+            // Function to send AJAX request to update favorite status
+            function updateFavoriteStatus(NameID, IsFavorite) {
+                $.ajax({
+                    url: '/SEC_User/SEC_User/UpdateFavoriteStatus',
+                    type: 'POST',
+                    data: { NameID: NameID, IsFavorite: IsFavorite },
+                    success: function (response) {
+                        if (response.success) {
+                            // Update was successful
+                            console.log("Favorite status updated successfully.");
+                        } else {
+                            // Update failed
+                            console.error("Failed to update favorite status:", response.message);
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        // Handle AJAX error
+                        console.error("AJAX error:", error);
+                    }
+                });
+            }
+        });
+    </script>
+}

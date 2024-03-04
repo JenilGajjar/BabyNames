@@ -1,0 +1,292 @@
+﻿@{
+    Layout = "~/Views/Shared/_Layout_User.cshtml";
+}
+@model BabyNames.Areas.SEC_User.Models.SEC_UserModel
+
+
+
+@using BabyNames.BAL
+
+
+
+
+<div class="pagetitle">
+    <h1 class="my-3">Profile Page</h1>
+
+
+
+    <section class="section profile">
+        <div class="row">
+            <div class="col-xl-4">
+
+                <div class="card ">
+                    <div class="card-body profile-card pt-4 d-flex flex-column align-items-center">
+
+                        @* <img src="~@Model.PhotoPath" alt="Profile" class="rounded-circle">
+                        *@
+                        <img src="@Url.Content(Model.PhotoPath)" alt="Profile" class="rounded-circle" />
+
+
+                        <h2>@Model.FirstName @Model.LastName</h2>
+
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="col-xl-8">
+
+                <div class="card">
+                    <div class="card-body pt-3">
+                        <!-- Bordered Tabs -->
+                        <ul class="nav nav-tabs nav-tabs-bordered">
+
+                            <li class="nav-item">
+                                <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#profile-overview">Overview</button>
+                            </li>
+
+                            <li class="nav-item">
+                                <button class="nav-link" data-bs-toggle="tab" data-bs-target="#profile-edit">Edit Profile</button>
+                            </li>
+
+
+                            <li class="nav-item">
+                                <button class="nav-link" data-bs-toggle="tab" data-bs-target="#profile-change-password">Change Password</button>
+                            </li>
+
+
+                        </ul>
+                        <div class="tab-content pt-2">
+
+
+
+                            <div class="tab-pane fade show active profile-overview" id="profile-overview">
+
+
+                                <h5 class="card-title my-3">Profile Details</h5>
+
+
+
+
+                                <div class="row ">
+                                    <div class="col-lg-3 col-md-4 label fw-bold">User Name</div>
+                                    <div class="col-lg-9 col-md-8">@Model.UserName</div>
+                                </div>
+
+
+
+
+                                <div class="row my-3">
+                                    <div class="col-lg-3 col-md-4 label fw-bold">FirstName</div>
+                                    <div class="col-lg-9 col-md-8">@Model.FirstName</div>
+                                </div>
+
+
+                                <div class="row">
+                                    <div class="col-lg-3 col-md-4 label fw-bold">LastName</div>
+                                    <div class="col-lg-9 col-md-8">@Model.LastName</div>
+                                </div>
+
+                                <div class="row my-3">
+                                    <div class="col-lg-3 col-md-4 label fw-bold">Email</div>
+                                    <div class="col-lg-9 col-md-8">@Model.Email</div>
+                                </div>
+
+
+
+
+
+                            </div>
+
+
+
+                            <div class="tab-pane fade profile-edit pt-3" id="profile-edit">
+
+                                <!-- Profile Edit Form -->
+                                <form asp-area="SEC_User"
+                                      asp-controller="SEC_User"
+                                      asp-action="UserUpdate"
+                                      enctype="multipart/form-data">
+
+                                    <div class="row mb-3">
+                                        <label for="profileImage" class="col-md-4 col-lg-3 col-form-label">Profile Image</label>
+                                        <div class="col-md-8 col-lg-9">
+
+
+                                            @*                                         <img src="@Model.PhotoPath" /> *@
+                                            <img src="@Url.Content(Model.PhotoPath)" class="img-fluid" />
+
+
+                                            <div class="pt-2">
+                                                <input class="form-control" type="file" id="formFile" asp-for="File">
+                                            </div>
+
+
+                                            @*                                         <form action="/upload" method="post" enctype="multipart/form-data">
+                                            <label for="fileUpload">Choose a file:</label>
+                                            <a class="btn btn-primary btn-sm" title="Upload new profile image"><i class="bi bi-upload"></i></a>
+                                            <input type="file" id="fileUpload" name="fileUpload">
+                                            </form> *@
+
+                                        </div>
+                                    </div>
+
+
+
+
+
+
+
+                                    <div class="row mb-3">
+                                        <label for="FirstName" class="col-md-4 col-lg-3 col-form-label">First Name</label>
+                                        <div class="col-md-8 col-lg-9">
+                                            <input name="FirstName" type="text" class="form-control" id="fullName" value="@Model.FirstName">
+                                        </div>
+                                    </div>
+
+
+                                    <div class="row mb-3">
+                                        <label for="LastName" class="col-md-4 col-lg-3 col-form-label">Last Name</label>
+                                        <div class="col-md-8 col-lg-9">
+                                            <input name="LastName" type="text" class="form-control" id="LastName" value="@Model.LastName">
+                                        </div>
+                                    </div>
+
+
+                                    <div class="row mb-3">
+                                        <label for="UserName" class="col-md-4 col-lg-3 col-form-label">User Name</label>
+                                        <div class="col-md-8 col-lg-9">
+                                            <input name="UserName" type="text" class="form-control" id="UserName" value="@Model.UserName">
+                                        </div>
+                                    </div>
+
+
+
+
+
+                                    <div class="row mb-3">
+                                        <label for="Email" class="col-md-4 col-lg-3 col-form-label">Email</label>
+                                        <div class="col-md-8 col-lg-9">
+                                            <input name="email" type="email" class="form-control" id="Email" value="@Model.Email">
+                                        </div>
+                                    </div>
+
+
+                                    <div class="text-center">
+                                        <button type="submit" class="btn btn-primary">Save Changes</button>
+                                    </div>
+                                </form><!-- End Profile Edit Form -->
+
+                            </div>
+
+                            <div class="tab-pane fade pt-3" id="profile-change-password">
+                                <!-- Change Password Form -->
+                                <form asp-area="SEC_User"
+                                      asp-controller="SEC_User"
+                                      asp-action="ChangePassword" 
+                                      method="post"
+                                      id="changePasswordForm">
+
+                                    <div class="row mb-3">
+                                        <label for="currentPassword" class="col-md-4 col-lg-3 col-form-label">Current Password</label>
+                                        <div class="col-md-8 col-lg-9">
+                                            <input type="password" class="form-control" id="currentPassword">
+                                        </div>
+                                    </div>
+
+                                    <div class="row mb-3">
+                                        <label for="newPassword" class="col-md-4 col-lg-3 col-form-label">New Password</label>
+                                        <div class="col-md-8 col-lg-9">
+                                            <input name="newPassword" type="password" class="form-control" id="newPassword">
+                                        </div>
+                                    </div>
+
+
+
+                                    <div class="row mb-3">
+                                        <label for="renewPassword" class="col-md-4 col-lg-3 col-form-label">Re-enter New Password</label>
+                                        <div class="col-md-8 col-lg-9">
+                                            <input  type="password" class="form-control" id="renewPassword">
+                                        </div>
+                                    </div>
+
+
+
+                                    <div class="text-center">
+                                        <button type="submit" id="changePasswordBtn" class="btn btn-primary">
+                                            Change Password
+                                        </button>
+                                    </div>
+                                </form><!-- End Change Password Form -->
+                            </div>
+
+
+                        </div><!-- End Bordered Tabs -->
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+
+
+
+
+
+
+    <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+    <script>
+        document.getElementById('changePasswordBtn').addEventListener('click', function (event) {
+            // Remove existing error messages
+            var errorMessages = document.querySelectorAll('.error-message');
+            errorMessages.forEach(function (errorMessage) {
+                errorMessage.remove();
+            });
+
+            var currentPassword = document.getElementById('currentPassword').value;
+            var newPassword = document.getElementById('newPassword').value;
+            var renewPassword = document.getElementById('renewPassword').value;
+
+            // Perform additional validation checks
+            if (currentPassword !== '@Model.Password') {
+                displayErrorMessage('currentPassword', 'Current password is incorrect.');
+                event.preventDefault(); // Prevent form submission
+                return;
+            }
+
+            if (newPassword === '') {
+                displayErrorMessage('newPassword', 'New password cannot be empty.');
+                event.preventDefault(); // Prevent form submission
+                return;
+            }
+
+            // Use the provided regular expression pattern for password validation
+            var passwordPattern = /^.*(?=.{8,16})(?=.*[a-zA-Z])(?=.*\d)(?=.*[!#$%&?"]).*$/;
+            if (!passwordPattern.test(newPassword)) {
+                displayErrorMessage('newPassword', 'Password must be between 8 and 16 characters long and contain at least one letter, one digit, and one special character (!#$%&?").');
+                event.preventDefault(); // Prevent form submission
+                return;
+            }
+
+            if (newPassword !== renewPassword) {
+                displayErrorMessage('renewPassword', 'New password and re-entered password do not match.');
+                event.preventDefault(); // Prevent form submission
+                return;
+            }
+
+          
+            // Allow the form to submit
+            console.log('Form submitted successfully.');
+        });
+
+        function displayErrorMessage(inputId, message) {
+            var inputField = document.getElementById(inputId);
+            var errorMessage = document.createElement('div');
+            errorMessage.classList.add('error-message');
+            errorMessage.textContent = message;
+            errorMessage.style.color = 'red';
+            inputField.parentNode.appendChild(errorMessage);
+        }
+    </script>

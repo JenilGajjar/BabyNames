@@ -1,10 +1,12 @@
 ﻿using BabyNames.Areas.BabyName.Models;
+using BabyNames.Areas.SEC_User.Models;
 using BabyNames.BAL;
 using BabyNames.DAL.Baby_DAL;
 using BabyNames.DAL.SEC_AdminDAL;
 using BabyNames.DAL.SEC_UserDAL;
 using BabyNames.Models;
 using Microsoft.AspNetCore.Mvc;
+using System.Data;
 
 namespace BabyNames.Areas.SEC_Admin.Controllers
 {
@@ -24,7 +26,9 @@ namespace BabyNames.Areas.SEC_Admin.Controllers
 
         public IActionResult Index()
         {
-            return View();
+            DataTable dt = sEC_AdminDALBase.PR_COUNT_RECORDS();
+
+            return View(dt);
         }
 
         public IActionResult UserList()
@@ -87,20 +91,21 @@ namespace BabyNames.Areas.SEC_Admin.Controllers
         public IActionResult BabySave(BabyModel babyModel)
         {
 
-            Console.WriteLine(babyModel.NameID);
-
-            Console.WriteLine(babyModel.Name);
-            Console.WriteLine(babyModel.Meaning);
-            Console.WriteLine(babyModel.Numerology);
-            Console.WriteLine(babyModel.Gender);
-            Console.WriteLine(babyModel.NakshatraID);
-            Console.WriteLine(babyModel.ZodiacID);
-            Console.WriteLine(babyModel.ReligionID);
-            Console.WriteLine(babyModel.Syllables);
-            Console.WriteLine(babyModel.CategoryID);
+            Console.WriteLine("NameID " + babyModel.NameID);
+            Console.WriteLine("Name " + babyModel.Name);
+            Console.WriteLine("Meaning " + babyModel.Meaning);
+            Console.WriteLine("Numerology " + babyModel.Numerology);
+            Console.WriteLine("Gender " + babyModel.Gender);
+            Console.WriteLine("NakshatraID " + babyModel.NakshatraID);
+            Console.WriteLine("ZodiacID " + babyModel.ZodiacID);
+            Console.WriteLine("ReligionID " + babyModel.ReligionID);
+            Console.WriteLine("Syllables " + babyModel.Syllables);
+            Console.WriteLine("CategoryID " + babyModel.CategoryID);
             Console.WriteLine(ModelState.ErrorCount);
+
+
             var errors = ModelState.Values.SelectMany(v => v.Errors);
-            foreach(var e in errors)
+            foreach (var e in errors)
             {
                 Console.WriteLine(e.ErrorMessage);
             }
@@ -114,7 +119,13 @@ namespace BabyNames.Areas.SEC_Admin.Controllers
                 return RedirectToAction("BabyList");
 
             }
-            return RedirectToAction("BabyNameAddEdit");
+            Baby_DALBase baby_DALBase = new Baby_DALBase();
+
+            ViewBag.ZodiacFilterList = baby_DALBase.ZodiacFilter();
+            ViewBag.ReligionFilterList = baby_DALBase.ReligionFilter();
+            ViewBag.NakshatraFilterList = baby_DALBase.NakshatraFilter();
+
+            return View("BabyNameAddEdit");
         }
 
         #endregion
@@ -148,10 +159,55 @@ namespace BabyNames.Areas.SEC_Admin.Controllers
 
         #endregion
 
+
+
+
+        #region Change Password
+        [HttpPost]
+        public IActionResult ChangePassword(string NewPassword)
+        {
+
+            // For example:
+            SEC_UserDALBase sEC_UserDALBase = new SEC_UserDALBase(_webHostEnvironment);
+
+            int UserID = (int)CV.UserID()!;
+
+
+            sEC_UserDALBase.PR_SEC_User_CHANGE_PASSWORD(UserID, NewPassword);
+            return RedirectToAction("Index");   
+        }
+        #endregion 
+
+
+        #region UserProfile
         public IActionResult UserProfile()
         {
-            return View();
-        }
+            SEC_UserDALBase userDAL = new SEC_UserDALBase(_webHostEnvironment);
 
+            int UserID = (int)CV.UserID();
+
+            SEC_UserModel modelSEC_User = userDAL.PR_SEC_UserSelectByUserName(UserID);
+            Console.WriteLine(CV.PhotoPath());
+
+            return View(modelSEC_User);
+        }
+        #endregion
+
+        #region User Update
+        public IActionResult UserUpdate(SEC_UserModel sEC_UserModel)
+        {
+
+
+            sEC_UserModel.UserID = (int)CV.UserID();
+            SEC_UserDALBase userDAL = new SEC_UserDALBase(_webHostEnvironment);
+            sEC_UserModel.Password = sEC_UserModel.Password ?? CV.Password();
+
+            userDAL.PR_SEC_User_UPDATEByPK(sEC_UserModel);
+
+
+            return RedirectToAction("Index");
+
+        }
+        #endregion
     }
 }

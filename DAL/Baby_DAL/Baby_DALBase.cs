@@ -2,6 +2,7 @@
 using Microsoft.Practices.EnterpriseLibrary.Data.Sql;
 using System.Data.Common;
 using System.Data;
+using BabyNames.BAL;
 
 namespace BabyNames.DAL.Baby_DAL
 {
@@ -165,6 +166,7 @@ namespace BabyNames.DAL.Baby_DAL
                 sqlDatabase.AddInParameter(dbCommand, "@Gender", DbType.String, filterModel.Gender);
                 sqlDatabase.AddInParameter(dbCommand, "@ReligionID", SqlDbType.Int, filterModel.ReligionID);
                 sqlDatabase.AddInParameter(dbCommand, "@NakshatraID", SqlDbType.Int, filterModel.NakshatraID);
+                sqlDatabase.AddInParameter(dbCommand, "@Name", SqlDbType.NVarChar, filterModel.Name);
 
 
                 List<BabyModel> babyModels = new List<BabyModel>();
@@ -221,6 +223,127 @@ namespace BabyNames.DAL.Baby_DAL
             }
             return babyModel;
 
+        }
+        #endregion
+
+        #region PR_GetFavoriteStatus_For_SEC_User
+        public Dictionary<int, bool> PR_GetFavoriteStatus_For_SEC_User()
+        {
+            try
+            {
+                Console.WriteLine("The value of id   " + CV.UserID());
+                Console.WriteLine("The value of name    " + CV.UserName());
+
+                int UserID = CV.UserID() ?? 0;
+
+                Dictionary<int, bool> favoriteStatus = new Dictionary<int, bool>();
+                if (UserID == 0) return favoriteStatus;
+                SqlDatabase sqlDatabase = new SqlDatabase(ConnString);
+                DbCommand dbCommand = sqlDatabase.GetStoredProcCommand("PR_GetFavoriteStatus_For_SEC_User");
+                sqlDatabase.AddInParameter(dbCommand, "@UserID", DbType.Int32, UserID);
+
+                using (IDataReader dr = sqlDatabase.ExecuteReader(dbCommand))
+                {
+
+                    while (dr.Read())
+                    {
+                        int NameID = (int)dr["NameID"];
+                        bool IsFavorite = Convert.ToBoolean(dr["IsFavorite"]);
+                        favoriteStatus.Add(NameID, IsFavorite);
+                    }
+                }
+
+
+                return favoriteStatus;
+            }
+            catch
+            {
+                return null;
+            }
+
+        }
+        #endregion
+
+        #region PR_SelectFavoriteName
+        public bool PR_SelectFavoriteName(int UserID, int NameID)
+        {
+            try
+            {
+
+                SqlDatabase sqlDatabase = new SqlDatabase(ConnString);
+                DbCommand dbCommand = sqlDatabase.GetStoredProcCommand("PR_SelectFavoriteName");
+                sqlDatabase.AddInParameter(dbCommand, "@UserID", DbType.Int32, UserID);
+                sqlDatabase.AddInParameter(dbCommand, "@NameID", DbType.Int32, NameID);
+                bool IsSuccuss = Convert.ToBoolean(sqlDatabase.ExecuteNonQuery(dbCommand));
+                return IsSuccuss;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+        #endregion
+
+        #region PR_UnselectFavoriteName
+
+
+        public bool PR_UnselectFavoriteName(int UserID, int NameID)
+        {
+            try
+            {
+
+                SqlDatabase sqlDatabase = new SqlDatabase(ConnString);
+                DbCommand dbCommand = sqlDatabase.GetStoredProcCommand("PR_UnselectFavoriteName");
+                sqlDatabase.AddInParameter(dbCommand, "@UserID", DbType.Int32, UserID);
+                sqlDatabase.AddInParameter(dbCommand, "@NameID", DbType.Int32, NameID);
+                bool IsSuccuss = Convert.ToBoolean(sqlDatabase.ExecuteNonQuery(dbCommand));
+                return IsSuccuss;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        #endregion
+
+        #region PR_GetUserFavoriteNames
+        public List<BabyModel> PR_GetUserFavoriteNames()
+        {
+            try
+            {
+                SqlDatabase sqlDatabase = new SqlDatabase(ConnString);
+                DbCommand dbCommand = sqlDatabase.GetStoredProcCommand("PR_GetUserFavoriteNames");
+                int UserID = (int)CV.UserID();
+                sqlDatabase.AddInParameter(dbCommand,  "@UserID", SqlDbType.Int,UserID);
+
+
+
+                List<BabyModel> babyModels = new List<BabyModel>();
+                using (IDataReader dr = sqlDatabase.ExecuteReader(dbCommand))
+                {
+                    while (dr.Read())
+                    {
+                        BabyModel babyModel = new BabyModel();
+                        babyModel.NameID = (int)dr["NameID"];
+                        babyModel.Name = dr["Name"].ToString();
+                        babyModel.Meaning = dr["Meaning"].ToString();
+                        babyModel.Numerology = (int)dr["Numerology"];
+                        babyModel.Gender = dr["Gender"].ToString();
+                        babyModel.Nakshatra = dr["Nakshatra"].ToString();
+                        babyModel.ZodiacName = dr["ZodiacName"].ToString();
+                        babyModel.ReligionName = dr["ReligionName"].ToString();
+                        babyModel.Syllables = dr["Syllables"].ToString();
+                        babyModel.CategoryName = dr["CategoryName"].ToString();
+                        babyModels.Add(babyModel);
+                    }
+                    return babyModels;
+                }
+            }
+            catch
+            {
+                return null; ;
+            }
         }
         #endregion
     }

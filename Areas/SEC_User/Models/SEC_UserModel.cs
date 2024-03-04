@@ -24,7 +24,7 @@ namespace BabyNames.Areas.SEC_User.Models
 
         public string? PhotoPath { get; set; }
 
-        public IFormFile File { get; set; }
+        public IFormFile? File { get; set; }
 
         public DateTime Created { get; set; }
 
