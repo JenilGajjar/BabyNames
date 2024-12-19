@@ -88,7 +88,6 @@ namespace BabyNames.DAL.SEC_AdminDAL
                 SqlDatabase sqlDatabase = new SqlDatabase(ConnString);
                 DbCommand dbCommand = sqlDatabase.GetStoredProcCommand("PR_Baby_Name_SelectByPK");
 
-
                 sqlDatabase.AddInParameter(dbCommand, "@NameID", DbType.Int32, NameID);
                 BabyModel babyModel = new BabyModel();
 

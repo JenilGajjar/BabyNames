@@ -120,7 +120,7 @@ namespace BabyNames.Areas.SEC_Admin.Controllers
 
             }
             Baby_DALBase baby_DALBase = new Baby_DALBase();
-
+                
             ViewBag.ZodiacFilterList = baby_DALBase.ZodiacFilter();
             ViewBag.ReligionFilterList = baby_DALBase.ReligionFilter();
             ViewBag.NakshatraFilterList = baby_DALBase.NakshatraFilter();

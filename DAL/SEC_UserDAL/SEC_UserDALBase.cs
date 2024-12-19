@@ -48,7 +48,7 @@ namespace BabyNames.DAL.SEC_UserDAL
         }
         #endregion
 
-        #region SEC_User_Register
+        #region Method : SEC_User_Register
 
         public bool SEC_User_Register(SEC_UserModel modelSEC_User)
         {
